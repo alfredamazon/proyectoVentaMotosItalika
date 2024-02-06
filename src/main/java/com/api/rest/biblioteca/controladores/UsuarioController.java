@@ -8,6 +8,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -29,7 +30,6 @@ public class UsuarioController {
 	@GetMapping
 	public ResponseEntity<Collection<Usuario>>listarPersonas(){
 		return new ResponseEntity<>(usuarioRepository.findAll(),HttpStatus.OK);
-		
 	}
 	@GetMapping("/{id}")
 	public ResponseEntity<Map<String,Object>> obtenerPersonaPorId(@PathVariable long id){
@@ -62,17 +62,12 @@ public class UsuarioController {
 			response.put("mensaje", "Error : no se pudo actualizar el cliente Id ".concat(id.toString().concat(" no existe en la base de datos")));
 			return new ResponseEntity<Map<String, Object>>(response, HttpStatus.NOT_FOUND);
 		}
-		
 		try {
-			if (usuarioActual.isPresent()) {
-				
-				
-				Usuario usuarioEncontrado = usuarioActual.get();
-			   
+			if (usuarioActual.isPresent()) {			
+				Usuario usuarioEncontrado = usuarioActual.get();			   
 			    usuarioEncontrado.setNombre(usuario.getNombre());
 			    usuarioEncontrado.setEdad(usuario.getEdad());
 			    usuarioUpdated = usuarioRepository.save(usuarioEncontrado);
-			    // Realizar otras operaciones con usuarioEncontrado si es necesario
 			} 
 		}
 		catch(DataAccessException e)
@@ -83,11 +78,9 @@ public class UsuarioController {
 		}
 		response.put("mensaje", "el cliente ha sido actualizado con exito!!!");
 		response.put("usuario", usuarioUpdated);
-		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);
-		
-		
+		return new ResponseEntity<Map<String, Object>>(response, HttpStatus.CREATED);	
 	}
-	
+	@PostMapping
 	public ResponseEntity<?> guardarPersona(@RequestBody Usuario usuario){
 		
 	    Usuario userinsert = null;
@@ -130,20 +123,7 @@ public class UsuarioController {
 		response.put("mensaje", "el cliente ha sido eliminado con exito!");
 		return new ResponseEntity<Map<String,Object>>(HttpStatus.OK);
 	}
-	@GetMapping("/{id}/sucursales")
-	public ResponseEntity<Collection<Sucursal>> listarFiestaDeLaPersona(@PathVariable long id)
-	{
-		Usuario usuario = usuarioRepository.findById(id).orElseThrow();
-		
-		if(usuario !=null)
-		{
-			return new ResponseEntity<>(usuario.getSucursales(),HttpStatus.OK);
-		}
-		else
-		{
-			return new ResponseEntity<>(null,HttpStatus.NOT_FOUND);
-		}
-	}
+
 	
 
 }
