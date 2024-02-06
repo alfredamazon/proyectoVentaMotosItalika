@@ -14,6 +14,7 @@ import javax.persistence.JoinTable;
 import javax.persistence.ManyToMany;
 import javax.persistence.OneToMany;
 import javax.persistence.Table;
+import javax.validation.constraints.NotNull;
 
 @Entity
 @Table(name = "usuarios")
@@ -23,10 +24,12 @@ public class Usuario {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "usuario_id")
 	private long id;
-
+   
+    @NotNull(message = "El nombre no puede ser nulo")
 	private String nombre;
-	
-	private int edad;
+  
+    @NotNull(message = "La edad no puede ser nulo")
+	private Integer edad;
 
 	@OneToMany(mappedBy="usuario", cascade=CascadeType.ALL)
 	private Set<PerfilHabilidad> habilidades=   new HashSet<>();
